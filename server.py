@@ -28,17 +28,18 @@ def get_vmNumCpus(name):
 def get_vmNumCards(name):
     return helpers.vmShowNumCards(name)
 
-@app.route('/vms/set/<name>/numCPUs/<num>', methods=['PUT'])
-def set_vmCpus(name, num):
+@app.route('/vms/set/numCPUs/<name>/<int:num>', methods=['PUT'])
+def set_vmCpus(name,num):
     return helpers.vmSetNumCards(name,num)
- 
+
 @app.route('/vms/set/<name>/vmRAM/<num>', methods=['PUT'])
 def set_vmRAM(name,num):
     return helpers.vmSetRAM(name,num)
  
 @app.route('/vms/set/<name>/%CPU/<num>', methods=['PUT'])
 def set_vmPercentageCpu(name,num):
-    return helpers.vmSetPercentageCpu(name,num):
+    return helpers.vmSetPercentageCpu(name,num)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True)

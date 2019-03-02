@@ -57,23 +57,26 @@ def vmsInfo(name):
     return jsonify({'Vmachine' : splittedStr})
 
 def vmShowRam(name):
-    output = subprocess.Popen(['VBoxManage', 'showvminfo', vm ], stdout = subprocess.PIPE)
+    output = subprocess.Popen(['VBoxManage', 'showvminfo', name ], stdout = subprocess.PIPE)
     ram = subprocess.check_output(['grep', 'Memory'], stdin = output.stdout)
-    vmRam = ram.splitlines()
+    num = ram.decode("utf-8")
+    vmRam = num.splitlines()
     return jsonify({'VmRam': vmRam})
 
 def vmShownumCpus(name):
-    output = subprocess.Popen(['VBoxManage', 'showvminfo', vm ], stdout = subprocess.PIPE)
+    output = subprocess.Popen(['VBoxManage', 'showvminfo', name ], stdout = subprocess.PIPE)
     cpus = subprocess.check_output(['grep', 'CPUs'], stdin = output.stdout)
-    vmCpus = cpus.splitlines()
+    numCpus = cpus.decode("utf-8")    
+    vmCpus = numCpus.splitlines()
     return jsonify({'VmNumberCpus': vmCpus})
 
 def vmShowNumCards(name):
-    output = subprocess.Popen(['VBoxManage', 'showvminfo', vm ], stdout = subprocess.PIPE)
-    cards = subprocess.check_output(['grep', 'NCI'], stdin = output.stdout)
+    output = subprocess.Popen(['VBoxManage', 'showvminfo', name ], stdout = subprocess.PIPE)
+    cards = subprocess.check_output(['grep', 'NIC'], stdin = output.stdout, stdout = subprocess.PIPE)
     enabled = subprocess.Popen(['grep', 'MAC'], stdin = cards.stdout, stdout = subprocess.PIPE)
     num = subprocess.check_output(['wc', '-l'], stdin = enabled.stdout)
-    return jsonify({'VmNumberNCI': num})
+    numCards = num.decode("utf-8")
+    return jsonify({'VmNumberNCI':numCards})
 
 def vmSetNumCards(name,num):
     subprocess.run(['vboxmanage', 'modifyvm', name, '--cpus' , num ])
@@ -88,4 +91,6 @@ def vmSetRAM(name,num):
 def vmSetPercentageCpu(name,num):
     subprocess.run(['vboxmanage', 'modifyvm', name, '--cpuexecutioncap' , num ])
 
-    return "Se ha modificado el porcentaje del procesador que se le asigna a la maquina virtual"
+    return "Se ha modificado el porcentaje del procesador que se le asignada a la maquina virtual"
+
+    
