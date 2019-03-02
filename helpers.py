@@ -79,14 +79,25 @@ def vmShowNumCards(name):
     return jsonify({'VmNumberNCI':numCards})
 
 def vmSetNumCards(name,num):
-    subprocess.run(['vboxmanage', 'modifyvm', name, '--cpus' , num ])
+    subprocess.Popen(['vboxmanage modifyvm', name, '--cpus', num])
 
-    return "Se ha modificado el numero de CPUs de la maquina virtual"
+    output = subprocess.Popen(['VBoxManage', 'showvminfo', name ], stdout = subprocess.PIPE)
+    cards = subprocess.check_output(['grep', 'NIC'], stdin = output.stdout, stdout = subprocess.PIPE)
+    enabled = subprocess.Popen(['grep', 'MAC'], stdin = cards.stdout, stdout = subprocess.PIPE)
+    num = subprocess.check_output(['wc', '-l'], stdin = enabled.stdout)
+    numCards = num.decode("utf-8")
+
+    return jsonify({'VmNumberNCI':numCards})
 
 def vmSetRAM(name,num):
     subprocess.run(['vboxmanage', 'modifyvm', name, '--memory' , num ])
 
-    return "Se ha modificado el numero de la RAM de la maquina virtual"
+    output = subprocess.Popen(['VBoxManage', 'showvminfo', name ], stdout = subprocess.PIPE)
+    ram = subprocess.check_output(['grep', 'Memory'], stdin = output.stdout)
+    num = ram.decode("utf-8")
+    vmRam = num.splitlines()
+
+    return jsonify({'VmRam': vmRam})
 
 def vmSetPercentageCpu(name,num):
     subprocess.run(['vboxmanage', 'modifyvm', name, '--cpuexecutioncap' , num ])

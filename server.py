@@ -32,11 +32,11 @@ def get_vmNumCards(name):
 def set_vmCpus(name,num):
     return helpers.vmSetNumCards(name,num)
 
-@app.route('/vms/set/<name>/vmRAM/<num>', methods=['PUT'])
+@app.route('/vms/set/<name>/vmRAM/<int:num>', methods=['PUT'])
 def set_vmRAM(name,num):
     return helpers.vmSetRAM(name,num)
  
-@app.route('/vms/set/<name>/%CPU/<num>', methods=['PUT'])
+@app.route('/vms/set/<name>/%CPU/<int:num>', methods=['PUT'])
 def set_vmPercentageCpu(name,num):
     return helpers.vmSetPercentageCpu(name,num)
 
