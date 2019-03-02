@@ -76,7 +76,16 @@ def vmShowNumCards(name):
     return jsonify({'VmNumberNCI': num})
 
 def vmSetNumCards(name,num):
-    subprocess.run(['vboxmanage', 'modifyvm', vm, '--cpus' , num ])
+    subprocess.run(['vboxmanage', 'modifyvm', name, '--cpus' , num ])
 
     return "Se ha modificado el numero de CPUs de la maquina virtual"
-    
+
+def vmSetRAM(name,num):
+    subprocess.run(['vboxmanage', 'modifyvm', name, '--memory' , num ])
+
+    return "Se ha modificado el numero de la RAM de la maquina virtual"
+
+def vmSetPercentageCpu(name,num):
+    subprocess.run(['vboxmanage', 'modifyvm', name, '--cpuexecutioncap' , num ])
+
+    return "Se ha modificado el porcentaje del procesador que se le asigna a la maquina virtual"
