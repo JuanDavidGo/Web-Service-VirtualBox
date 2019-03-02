@@ -52,6 +52,31 @@ def vmsInfo(name):
     p= subprocess.check_output(['VBoxManage', 'showvminfo', name ])
     
     vm = p.decode("utf-8")
-    splittedStr = vm.split()
+    splittedStr = vm.splitlines()
 
     return jsonify({'Vmachine' : splittedStr})
+
+def vmShowRam(name):
+    output = subprocess.Popen(['VBoxManage', 'showvminfo', vm ], stdout = subprocess.PIPE)
+    ram = subprocess.check_output(['grep', 'Memory'], stdin = output.stdout)
+    vmRam = ram.splitlines()
+    return jsonify({'VmRam': vmRam})
+
+def vmShownumCpus(name):
+    output = subprocess.Popen(['VBoxManage', 'showvminfo', vm ], stdout = subprocess.PIPE)
+    cpus = subprocess.check_output(['grep', 'CPUs'], stdin = output.stdout)
+    vmCpus = cpus.splitlines()
+    return jsonify({'VmNumberCpus': vmCpus})
+
+def vmShowNumCards(name):
+    output = subprocess.Popen(['VBoxManage', 'showvminfo', vm ], stdout = subprocess.PIPE)
+    cards = subprocess.check_output(['grep', 'NCI'], stdin = output.stdout)
+    enabled = subprocess.Popen(['grep', 'MAC'], stdin = cards.stdout, stdout = subprocess.PIPE)
+    num = subprocess.check_output(['wc', '-l'], stdin = enabled.stdout)
+    return jsonify({'VmNumberNCI': num})
+
+def vmSetNumCards(name,num):
+    subprocess.run(['vboxmanage', 'modifyvm', vm, '--cpus' , num ])
+
+    return "Se ha modificado el numero de CPUs de la maquina virtual"
+    
